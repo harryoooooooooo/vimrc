@@ -90,7 +90,7 @@ command W call Sudowrite()
 function! MakeLocList(comm, ...)
   let errorformat = &g:errorformat
   let &g:errorformat = get(a:, 1, &g:errorformat)
-  exe 'lexpr system(a:comm) "' a:comm
+  exe 'lexpr system(a:comm) " a:comm =' a:comm
   let &g:errorformat = errorformat
 endfunction
 
