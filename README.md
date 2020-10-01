@@ -32,7 +32,7 @@ $ ./install.sh
 ```
 2. Copy the config files to default config path.
 ```
-$ cp -r ~/.vim/bundle/powerline/powerline/config_files ~/.config/powerline
+$ cp -r REPO_ROOT/powerline/powerline/config_files ~/.config/powerline
 ```
 
 Skip these steps and delete the `Plugin 'fatih/vim-go'` line if you don't need to play with Golang.
