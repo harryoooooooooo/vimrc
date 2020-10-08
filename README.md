@@ -30,9 +30,9 @@ $ git clone https://github.com/powerline/fonts /tmp/fonts
 $ cd /tmp/fonts
 $ ./install.sh
 ```
-2. Copy the config files to default config path.
+2. Copy the config files to the default config path.
 ```
-$ cp -r REPO_ROOT/powerline/powerline/config_files ~/.config/powerline
+$ cp -r PATH_TO_THIS_REPO/powerline -t ~/.config
 ```
 
 Skip these steps and delete the `Plugin 'fatih/vim-go'` line if you don't need to play with Golang.
