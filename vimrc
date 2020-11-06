@@ -23,7 +23,7 @@ Plugin 'udalov/kotlin-vim'
 call vundle#end()
 filetype plugin indent on
 
-set expandtab shiftwidth=0 softtabstop=0 tabstop=2
+set expandtab shiftwidth=2 softtabstop=2 tabstop=2
 set laststatus=2 noshowmode
 set foldmethod=syntax foldlevelstart=99
 set number relativenumber
@@ -38,6 +38,15 @@ set vb t_vb=
 set list listchars=tab:¦\ 
 autocmd FileType qf setlocal nowrap
 syntax on
+
+function! SetTab(et, len)
+  let &l:expandtab   = a:et
+  let &l:shiftwidth  = a:len
+  let &l:softtabstop = a:len
+  let &l:tabstop     = a:len
+endfunction
+autocmd FileType python call SetTab(1, 2)
+autocmd FileType go     call SetTab(0, 2)
 
 colorscheme Tomorrow-Night-Bright
 hi ExtraWhitespace ctermbg=darkgray
