@@ -20,6 +20,7 @@ Plugin 'neovimhaskell/haskell-vim'
 Plugin 'dag/vim-fish'
 Plugin 'fatih/vim-go'
 Plugin 'udalov/kotlin-vim'
+Plugin 'rust-lang/rust.vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -91,6 +92,8 @@ let g:haskell_indent_after_bare_where = 2
 let g:haskell_indent_do = 4
 let g:haskell_indent_in = 0
 let g:haskell_indent_guard = 4
+
+let g:rustfmt_autosave = 1
 
 function! Sudowrite()
   exe 'w ! sudo tee' shellescape('%') '> /dev/null'

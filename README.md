@@ -20,7 +20,7 @@ $ sudo pacman -Syu ctags
 Build ycm core. See [here](https://github.com/ycm-core/YouCompleteMe#linux-64-bit) for more info.
 ```
 $ cd ~/.vim/bundle/YouCompleteMe/
-$ python3 install.py --{go,clangd,clang}-completer
+$ python3 install.py --{go,clangd,clang,rust}-completer
 ```
 
 Skip these steps and delete the `Plugin 'powerline/powerline'` line if you have already had your powerline installed, and don't forget to set the powerline rtp by `set rtp+=/PATH/TO/YOUR/POWERLINE/LIBRARY/bindings/vim`.
@@ -43,6 +43,11 @@ $ sudo pacman -Syu go
 2. Install Golang helpers.
 ```
 $ vim +GoInstallBinaries +qall
+```
+
+Skip this step and delete the `Plugin 'rust-lang/rust.vim'` line if you don't need to play with Rust:
+```
+$ sudo pacman -Syu rust
 ```
 
 Refer https://github.com/SirVer/ultisnips for how to write your own snippets, or use the [examples](https://github.com/honza/vim-snippets) here.
