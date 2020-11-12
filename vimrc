@@ -108,36 +108,87 @@ function! MakeLocList(comm, ...)
   let &g:errorformat = errorformat
 endfunction
 
-command -nargs=1 Find  call MakeLocList('find -type f -ipath '.shellescape('*'.<q-args>.'*'), '%f')
-command -nargs=1 Findd call MakeLocList('find -type d -ipath '.shellescape('*'.<q-args>.'*'), '%f')
-command -nargs=1 Grep  call  MakeLocList('grep -nr  '.shellescape('\b'.<q-args>.'\b'), '%f:%l:%m') | lopen
-command -nargs=1 Grepi call  MakeLocList('grep -nri '.shellescape('\b'.<q-args>.'\b'), '%f:%l:%m') | lopen
-command -nargs=1 Grepw  call MakeLocList('grep -nr  '.shellescape(<q-args>), '%f:%l:%m') | lopen
-command -nargs=1 Grepwi call MakeLocList('grep -nri '.shellescape(<q-args>), '%f:%l:%m') | lopen
+" Grep/Ag searches pat in all files recursively under CWD.
+" grep/ag style parameters are passed to exe_name.
+" Optional parameters can be passed as the third argument:
+"   i => ignore case; by default case sensitive
+"   w => do not search for a whole word; by default search for a whole word
+function! Grep(exe_name, pat, ...)
+  let args = get(a:, 1, '')
+  let comm = a:exe_name.' -nr'
+  let pat = a:pat
 
-" Enable modern tools by calling these function, and may specify the binary name
-" by passing it as parameter.
-function! EnableFd(...)
-  let g:fd_comm = get(a:, 1, 'fd')
-  command! -nargs=1 Find  call MakeLocList(fd_comm.' -tf -p -- '.shellescape(<q-args>), '%f')
-  command! -nargs=1 Findd call MakeLocList(fd_comm.' -td -p -- '.shellescape(<q-args>), '%f')
+  if stridx(args, 'w') == -1
+    let pat = '\b'.pat.'\b'
+  endif
+  if stridx(args, 'i') != -1
+    let comm = comm.' -i'
+  endif
+  call MakeLocList(comm.' -- '.shellescape(pat), '%f:%l:%m')
 endfunction
-function! EnableAg(...)
-  let g:ag_comm = get(a:, 1, 'ag')
-  command! -nargs=1 Grep  call MakeLocList(ag_comm.' -ws --vimgrep -- '.shellescape(<q-args>), '%f:%l:%c:%m') | lopen
-  command! -nargs=1 Grepi call MakeLocList(ag_comm.' -wi --vimgrep -- '.shellescape(<q-args>), '%f:%l:%c:%m') | lopen
-  command! -nargs=1 Grepw  call MakeLocList(ag_comm.' -s --vimgrep -- '.shellescape(<q-args>), '%f:%l:%c:%m') | lopen
-  command! -nargs=1 Grepwi call MakeLocList(ag_comm.' -i --vimgrep -- '.shellescape(<q-args>), '%f:%l:%c:%m') | lopen
+function! Ag(exe_name, pat, ...)
+  let args = get(a:, 1, '')
+  let comm = a:exe_name.' --vimgrep'
+  let pat = a:pat
+
+  if stridx(args, 'w') == -1
+    let comm = comm.' -w'
+  endif
+  if stridx(args, 'i') != -1
+    let comm = comm.' -i'
+  else
+    let comm = comm.' -s'
+  endif
+  call MakeLocList(comm.' -- '.shellescape(pat), '%f:%l:%c:%m')
 endfunction
 
-if exepath('fd') != ""
-  call EnableFd()
-endif
-if exepath('fdfind') != ""
-  call EnableFd('fdfind')
-endif
+" Find/Fd searches files path matching pat recursively under CWD.
+" find/fd style parameters are passed to exe_name.
+" Optional parameters can be passed as the third argument:
+"   d => search directory only; by default file only
+function! Find(exe_name, pat, ...)
+  let args = get(a:, 1, '')
+  let comm = a:exe_name
+  let pat = a:pat
+
+  if stridx(args, 'd') == -1
+    let comm = comm.' -type f'
+  else
+    let comm = comm.' -type d'
+  endif
+  call MakeLocList(comm.' -ipath '.shellescape('*'.pat.'*'), '%f')
+endfunction
+function! Fd(exe_name, pat, ...)
+  let args = get(a:, 1, '')
+  let comm = a:exe_name.' -p'
+  let pat = a:pat
+
+  if stridx(args, 'd') == -1
+    let comm = comm.' -tf'
+  else
+    let comm = comm.' -td'
+  endif
+  call MakeLocList(comm.' -- '.shellescape(pat), '%f')
+endfunction
+
+" Prefer using ag than grep.
 if exepath('ag') != ""
-  call EnableAg()
+  command -nargs=+ Grep call Ag('ag', <f-args>) | lopen
+elseif exepath('grep') != ""
+  command -nargs=+ Grep call Grep('grep', <f-args>) | lopen
+else
+  command -nargs=* Grep echo 'No valid executable for Grep'
+endif
+
+" Prefer using fd/fdfind than find.
+if exepath('fd') != ""
+  command -nargs=+ Find call Fd('fd', <f-args>)
+elseif exepath('fdfind') != ""
+  command -nargs=+ Find call Fd('fdfind', <f-args>)
+elseif exepath('find') != ""
+  command -nargs=+ Find call Find('find', <f-args>)
+else
+  command -nargs=* Find echo 'No valid executable for Find'
 endif
 
 nnoremap Y y$

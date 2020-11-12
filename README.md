@@ -57,8 +57,10 @@ Recommend install [the silver searcher](https://github.com/ggreer/the_silver_sea
 # Usage
 * `:Grep PATTERN` to search `PATTERN` in all files under current working directory, auto jump to the first result, and open the location list. The results are stored in the location list, see `:h :lfile`.
   * By default, the command only match a whole word, that is, `PATTERN` should be surrounded by non-word characters or start/end of line.
-  * `:Grepi` for case non-sensitive, `:Grepw` for searching part of a word, `:Grepwi` for both.
-* `:Find PATTERN` to search files whose path matches `PATTERN`. `:Findd` for searching directory. Since it searches "path", '/' is valid in `PATTERN`. 
+  * `:Grep PATTERN i` for case non-sensitive
+  * `:Grep PATTERN w` for searching part of a word
+  * Multiple parameters are available, e.g., `:Grep PATTERN iw` (order doesn't matter)
+* `:Find PATTERN` to search files whose path matches `PATTERN`. `:Find PATTERN d` for searching directory. Since it searches "path", '/' is valid in `PATTERN`.
   * It searches case non-secsitively, and some regular expression are valid. For example, `:Find test_dir/.*\.py` matches the files under test\_dir (recursively) and ends with ".py".
 * `Y` is mapped to `y$` to match the behavior of `D`.
 * `F3` in Normal mode to search the word under cursor recursively from current working directory.
