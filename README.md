@@ -59,7 +59,8 @@ Recommend install [the silver searcher](https://github.com/ggreer/the_silver_sea
   * By default, the command only match a whole word, that is, `PATTERN` should be surrounded by non-word characters or start/end of line.
   * `:Grep PATTERN i` for case non-sensitive
   * `:Grep PATTERN w` for searching part of a word
-  * Multiple parameters are available, e.g., `:Grep PATTERN iw` (order doesn't matter)
+  * `:Grep PATTERN h` for searching only in files with suffix ".h"
+  * Multiple parameters are available, e.g., `:Grep PATTERN iwh` (order doesn't matter)
 * `:Find PATTERN` to search files whose path matches `PATTERN`. `:Find PATTERN d` for searching directory. Since it searches "path", '/' is valid in `PATTERN`.
   * It searches case non-secsitively, and some regular expression are valid. For example, `:Find test_dir/.*\.py` matches the files under test\_dir (recursively) and ends with ".py".
 * `Y` is mapped to `y$` to match the behavior of `D`.

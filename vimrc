@@ -113,6 +113,7 @@ endfunction
 " Optional parameters can be passed as the third argument:
 "   i => ignore case; by default case sensitive
 "   w => do not search for a whole word; by default search for a whole word
+"   h => search only files with suffix '.h'; by default all files
 function! Grep(exe_name, pat, ...)
   let args = get(a:, 1, '')
   let comm = a:exe_name.' -nr'
@@ -123,6 +124,9 @@ function! Grep(exe_name, pat, ...)
   endif
   if stridx(args, 'i') != -1
     let comm = comm.' -i'
+  endif
+  if stridx(args, 'h') != -1
+    let comm = comm.' --include='.shellescape('*.h')
   endif
   call MakeLocList(comm.' -- '.shellescape(pat), '%f:%l:%m')
 endfunction
@@ -138,6 +142,9 @@ function! Ag(exe_name, pat, ...)
     let comm = comm.' -i'
   else
     let comm = comm.' -s'
+  endif
+  if stridx(args, 'h') != -1
+    let comm = comm.' -G '.shellescape('\.h$')
   endif
   call MakeLocList(comm.' -- '.shellescape(pat), '%f:%l:%c:%m')
 endfunction
